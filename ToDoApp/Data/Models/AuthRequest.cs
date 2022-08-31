@@ -1,4 +1,4 @@
-﻿namespace ToDoApp.Data.HelpModels
+﻿namespace ToDoApp.Data.Models
 {
     public class AuthRequest
     {

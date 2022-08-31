@@ -1,6 +1,6 @@
-﻿using ToDoApp.Data.Models;
+﻿using ToDoApp.Data.Entities;
 
-namespace ToDoApp.Data.HelpModels
+namespace ToDoApp.Data.Models
 {
     public class AuthResponse
     {

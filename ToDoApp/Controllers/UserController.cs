@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToDoApp.Data;
-using ToDoApp.Data.Models;
+using ToDoApp.Data.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 using ToDoApp.Helper;
-using ToDoApp.Data.HelpModels;
+using ToDoApp.Data.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using ToDoApp.Data.Abstract;
+using ToDoApp.Data.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,10 +20,14 @@ namespace ToDoApp.Controllers
     public class UserController : ControllerBase
     {
         private IConfiguration Configuration { get; }
+        private ToDoAppDbContext context;
+        private IUserRepository userRepository;
 
         public UserController(IConfiguration configuration)
         {
             Configuration = configuration;
+            context = new ToDoAppDbContext();
+            userRepository = new UserRepository(context);
         }
 
         // GET: api/<UserController>
@@ -29,60 +35,41 @@ namespace ToDoApp.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                //return db.User.OrderBy(user => user.Id).ToList();
-                return db.Set<User>().OrderBy(user => user.Id).ToList();
-            }
+            return userRepository.GetAll();
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                return db.User.ToList().Where(user => user.Id == id).FirstOrDefault();
-            }
+            return userRepository.GetSingle(id);
         }
 
+        // POST api/<UserController>/register
         [HttpPost("register")]
         public IActionResult Register([FromBody] User user)
         {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                User sameLogin = db.User.ToList().Where(u => u.Login == user.Login).FirstOrDefault();
-                User sameEmail = db.User.ToList().Where(u => u.Email == user.Email).FirstOrDefault();
+            string truePassword = user.Password;
+            user.Password = Auth.HashPassword(user.Password);
 
-                if (sameLogin == null && sameEmail == null)
-                {
-                    string truePassword = user.Password;
-                    user.Password = Auth.HashPassword(user.Password);
+            bool result = userRepository.Registration(user);
 
-                    db.User.Add(user);
-                    db.SaveChanges();
+            if (result)
+                return Authenticate(new AuthRequest { Login = user.Login, Password = truePassword });
 
-                    return Authenticate(new AuthRequest { Login = user.Login, Password = truePassword });
-                }
-
-                return BadRequest("User with such login and/or email already exists!");
-            }
+            return BadRequest("User with such login and/or email already exists!");
         }
 
+        // POST api/<UserController>/authenticate
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] AuthRequest authData)
         {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                User user = db.User.ToList().Where(u => u.Login == authData.Login).FirstOrDefault();
+            User user = userRepository.GetSingle(u => u.Login == authData.Login);
 
-                if (user != null && Auth.VerifyHashedPassword(user.Password, authData.Password))
-                {
-                    return Ok(new AuthResponse(user, Configuration.GenerateJwtToken(user)));
-                }
+            if (user != null && Auth.VerifyHashedPassword(user.Password, authData.Password))
+                return Ok(new AuthResponse(user, Configuration.GenerateJwtToken(user)));
 
-                return BadRequest(new { message = "Login or password is incorrect!" });
-            }
+            return BadRequest(new { message = "Login or password is incorrect!" });
         }
 
         /*[Authorize]

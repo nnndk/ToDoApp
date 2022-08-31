@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using ToDoApp.Data.Models;
+using ToDoApp.Data.Entities;
 
 namespace ToDoApp.Helper
 {

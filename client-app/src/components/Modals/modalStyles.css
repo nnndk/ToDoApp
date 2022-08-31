@@ -1,0 +1,31 @@
+.modal-label {
+    margin: 0;
+    margin-right: 5px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+}
+
+.form-checkbox {
+    width: 16px;
+    height: 16px;
+    padding-top: 2px;
+}
+
+.show-pass-icon {
+    cursor: pointer;
+    font-size: 20px;
+    vertical-align: middle !important;
+    vertical-align: 0.125em;
+}
+
+.form-control {
+    margin-left: 0 !important;
+    border-radius: 6px !important;
+}
+
+.sign-up-link {
+    cursor: pointer;
+}

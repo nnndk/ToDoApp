@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace ToDoApp.Data.Abstract
 {
@@ -8,8 +9,8 @@ namespace ToDoApp.Data.Abstract
     {
         int Count();
         IEnumerable<T> GetAll();
-        T GetSingle(int id);
-        T GetSingle(Expression<Func<T, bool>> predicate);
+        Task<T> GetSingle(int id);
+        Task<T> GetSingle(Expression<Func<T, bool>> predicate);
         void Add(T entity);
         void Update(T entity);
         void Delete(int id);

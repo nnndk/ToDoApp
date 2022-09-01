@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using ToDoApp.Data.Abstract;
 using ToDoApp.Data.Repositories;
+using System.Threading;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,74 +41,38 @@ namespace ToDoApp.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public async Task<User> Get(int id)
         {
-            return userRepository.GetSingle(id);
+            return await userRepository.GetSingle(id);
         }
 
         // POST api/<UserController>/register
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
             string truePassword = user.Password;
             user.Password = Auth.HashPassword(user.Password);
 
-            bool result = userRepository.Registration(user);
+            //bool result = await Task.Run(() => userRepository.Register(user));
+            //Thread.Sleep(1000); // problem is solved but it is a crutch
+            bool result = userRepository.Register(user);
 
             if (result)
-                return Authenticate(new AuthRequest { Login = user.Login, Password = truePassword });
+                return await Authenticate(new AuthRequest { Login = user.Login, Password = truePassword });
 
             return BadRequest("User with such login and/or email already exists!");
         }
 
         // POST api/<UserController>/authenticate
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] AuthRequest authData)
+        public async Task<IActionResult> Authenticate([FromBody] AuthRequest authData)
         {
-            User user = userRepository.GetSingle(u => u.Login == authData.Login);
+            User user = await Task.Run(() => userRepository.GetSingle(u => u.Login == authData.Login));
 
             if (user != null && Auth.VerifyHashedPassword(user.Password, authData.Password))
                 return Ok(new AuthResponse(user, Configuration.GenerateJwtToken(user)));
 
             return BadRequest(new { message = "Login or password is incorrect!" });
         }
-
-        /*[Authorize]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                var users = db.User.ToList();
-                return Ok(users);
-            }
-        }*/
-
-        /*// PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] User user)
-        {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                db.User.Update(user);
-                db.SaveChangesAsync();
-            }
-        }
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            using (ToDoAppDbContext db = new ToDoAppDbContext())
-            {
-                var user = db.User.FindAsync(id);
-
-                if (user != null)
-                {
-                    db.User.Remove(user.Result);
-                    db.SaveChangesAsync();
-                }
-            }
-        }*/
     }
 }

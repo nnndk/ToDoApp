@@ -8,21 +8,26 @@ namespace ToDoApp.Data.Repositories
     {
         public UserRepository(ToDoAppDbContext context) : base(context) { }
 
-        public bool IsLoginUnique(string login)
+        public async Task<bool> IsLoginUnique(string login)
         {
-            return GetSingle(u => u.Login == login) == null;
+            return await GetSingle(u => u.Login == login) == null;
         }
 
-        public bool IsEmailUnique(string email)
+        public async Task<bool> IsEmailUnique(string email)
         {
-            return GetSingle(u => u.Email == email) == null;
+            return await GetSingle(u => u.Email == email) == null;
         }
 
-        public bool Registration(User user)
+        public bool Register(User user)
         {
-            if (IsLoginUnique(user.Login) && IsEmailUnique(user.Email))
+            bool isLoginUnique = IsLoginUnique(user.Login).Result;
+            bool isEmailUnique = IsEmailUnique(user.Email).Result;
+
+            if (isLoginUnique && isEmailUnique)
             {
-                Add(user);
+                //Add(user);
+                _context.Set<User>().Add(user);
+                _context.SaveChanges();
                 return true;
             }
 

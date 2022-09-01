@@ -4,13 +4,14 @@ using System.Linq.Expressions;
 using ToDoApp.Data.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ToDoApp.Data.Repositories
 {
     public class BaseEntityRepository<T> : IBaseEntityRepository<T>
         where T : class, IBaseEntity, new()
     {
-        private ToDoAppDbContext _context;
+        protected ToDoAppDbContext _context;
 
         public BaseEntityRepository(ToDoAppDbContext context)
         {
@@ -27,14 +28,14 @@ namespace ToDoApp.Data.Repositories
             return _context.Set<T>().OrderBy(x => x.Id).AsEnumerable();
         }
 
-        public T GetSingle(int id)
+        public async Task<T> GetSingle(int id)
         {
-            return _context.Set<T>().FirstOrDefault(x => x.Id == id);
+            return await _context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public T GetSingle(Expression<Func<T, bool>> predicate)
+        public async Task<T> GetSingle(Expression<Func<T, bool>> predicate)
         {
-            return _context.Set<T>().FirstOrDefault(predicate);
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
         }
 
         public virtual async void Add(T entity)
@@ -60,7 +61,7 @@ namespace ToDoApp.Data.Repositories
             }
         }
 
-        private async void Commit()
+        protected async void Commit()
         {
             await _context.SaveChangesAsync();
         }

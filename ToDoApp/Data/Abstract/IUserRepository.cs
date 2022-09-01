@@ -1,11 +1,12 @@
-﻿using ToDoApp.Data.Entities;
+﻿using System.Threading.Tasks;
+using ToDoApp.Data.Entities;
 
 namespace ToDoApp.Data.Abstract
 {
     public interface IUserRepository: IBaseEntityRepository<User>
     {
-        bool IsLoginUnique(string login);
-        bool IsEmailUnique(string email);
-        bool Registration(User user);
+        Task<bool> IsLoginUnique(string login);
+        Task<bool> IsEmailUnique(string email);
+        bool Register(User user);
     }
 }

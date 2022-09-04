@@ -32,7 +32,7 @@ namespace ToDoApp.Controllers
         }
 
         // GET: api/<UserController>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public IEnumerable<User> Get()
         {
@@ -52,9 +52,6 @@ namespace ToDoApp.Controllers
         {
             string truePassword = user.Password;
             user.Password = Auth.HashPassword(user.Password);
-
-            //bool result = await Task.Run(() => userRepository.Register(user));
-            //Thread.Sleep(1000); // problem is solved but it is a crutch
             bool result = userRepository.Register(user);
 
             if (result)

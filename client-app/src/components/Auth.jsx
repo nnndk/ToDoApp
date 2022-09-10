@@ -12,9 +12,9 @@ export const Auth = (props) => {
 
     switch (modal) {
         case "logIn":
-            return <LogInModal show={props.show} handleClose={handleClose} setModal={setModal} />
+            return <LogInModal show={props.show} handleClose={handleClose} setModal={setModal} auth={props.auth} />
         case "signUp":
-            return <SignUpModal show={props.show} handleClose={handleClose} setModal={setModal} />
+            return <SignUpModal show={props.show} handleClose={handleClose} setModal={setModal} auth={props.auth}  />
         default:
             <></>
     }

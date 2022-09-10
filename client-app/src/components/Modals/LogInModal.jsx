@@ -23,29 +23,14 @@ export const LogInModal = (props) => {
 
     const logIn = async (event) => {
         event.preventDefault()
-        /*let currDate = new Date()
-        
-        const result = await fetch('TestItems', {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                someText: item.someText,
-                doubleNumber: parseFloat(item.doubleNumber),
-                boolValue: item.boolValue,
-                datetimeTest: new Date(item.datetimeTest),
-                lastChange: `${currDate.getFullYear().toString().padStart(4, "0")}-` +
-                    `${currDate.getMonth().toString().padStart(2, "0")}-` +
-                    `${currDate.getDate().toString().padStart(2, "0")}T` +
-                    `${currDate.getHours().toString().padStart(2, "0")}:` +
-                    `${currDate.getMinutes().toString().padStart(2, "0")}:` +
-                    `${currDate.getSeconds().toString().padStart(2, "0")}`
-            })
+        const axios = require("axios")
+        const result = await axios.post("api/User/login", {
+            login: authData.login,
+            password: authData.password
         })
 
-        props.fetchData()*/
+        console.log(result)
+        props.auth()
         props.handleClose()
     }
 
@@ -57,12 +42,12 @@ export const LogInModal = (props) => {
             <Modal.Body>
                 <form onSubmit={logIn}>
                     <div className="mb-3 modal-form-item">
-                        <label for="login" class="form-label">Login</label>
+                        <label className="form-label">Login</label>
                         <input className="form-control" type="text" name="login"
                             value={authData.login} onChange={handleChange} id="login" required />
                     </div>
                     <div className="mb-3 modal-form-item">
-                        <label for="password" class="form-label">Password</label>
+                        <label className="form-label">Password</label>
                         <div className="input-group">
                             <input className="form-control mx-2" id="password" type={showPassword ? "text" : "password"}
                                 name="password" value={authData.password} onChange={handleChange} required />

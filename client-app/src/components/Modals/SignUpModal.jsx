@@ -53,6 +53,7 @@ export const SignUpModal = (props) => {
         const data = await axios
             .get("api/User")
             .then(res => res.data)
+        props.auth()
         props.handleClose()
     }
 
@@ -64,17 +65,17 @@ export const SignUpModal = (props) => {
             <Modal.Body>
                 <form onSubmit={signUp}>
                     <div className="mb-3 modal-form-item">
-                        <label for="email" class="form-label">Email</label>
+                        <label className="form-label">Email</label>
                         <input className="form-control" type="email" name="email"
                             value={authData.email} onChange={handleChange} id="email" required />
                     </div>
                     <div className="mb-3 modal-form-item">
-                        <label for="login" class="form-label">Login</label>
+                        <label className="form-label">Login</label>
                         <input className="form-control" type="text" name="login"
                             value={authData.login} onChange={handleChange} id="login" required />
                     </div>
                     <div className="mb-3 modal-form-item">
-                        <label for="password" class="form-label">Password</label>
+                        <label className="form-label">Password</label>
                         <span className="input-group">
                             <input className="form-control mx-2" id="password" type={showPassword ? "text" : "password"}
                                 name="password" value={authData.password} onChange={handleChange} required />
@@ -83,7 +84,7 @@ export const SignUpModal = (props) => {
                         </span>
                     </div>
                     {/*<div className="mb-3 modal-form-item">
-                        <label for="confirmPassword" class="form-label">Confirm password</label>
+                        <label className="form-label">Confirm password</label>
                         <input className="form-control mx-2" id="confirmPassword" type={showPassword ? "text" : "password"}
                             name="confirmPassword" value={authData.confirmPassword} onChange={handleChange} required />
                     </div>*/}

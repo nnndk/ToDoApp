@@ -37,23 +37,13 @@ namespace ToDoApp
                 .AllowAnyMethod().AllowAnyHeader());
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
                         var key = Encoding.UTF8.GetBytes(Configuration["JWT:Key"]);
 
                         options.RequireHttpsMetadata = false;
                         options.SaveToken = true;
-                        /*options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true, // валидация издателя
-                            ValidIssuer = Configuration["JWT:Issuer"], // издатель
-                            ValidateAudience = true, // валидация потребителя
-                            ValidAudience = Configuration["JWT:Audience"], // потребитель
-                            ValidateLifetime = true, // валидация lifetime
-                            IssuerSigningKey = new SymmetricSecurityKey(key), // установка ключа безопасности
-                            ValidateIssuerSigningKey = true, // валидация ключа безопасности
-                        };*/
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = false, // валидация издателя
@@ -62,7 +52,11 @@ namespace ToDoApp
                             IssuerSigningKey = new SymmetricSecurityKey(key), // установка ключа безопасности
                             ValidateIssuerSigningKey = true, // валидация ключа безопасности
                         };
-                    });
+                    });*/
+
+            // Authentication and authorization
+            services.AddAuthentication("Cookies").AddCookie(option => option.LoginPath = "/api/UserController/login");
+            services.AddAuthorization();
 
             services.AddControllersWithViews();
 

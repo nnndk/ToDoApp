@@ -25,34 +25,13 @@ export const SignUpModal = (props) => {
 
     const signUp = async (event) => {
         event.preventDefault()
-        /*let currDate = new Date()
-        
-        const result = await fetch('TestItems', {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                someText: item.someText,
-                doubleNumber: parseFloat(item.doubleNumber),
-                boolValue: item.boolValue,
-                datetimeTest: new Date(item.datetimeTest),
-                lastChange: `${currDate.getFullYear().toString().padStart(4, "0")}-` +
-                    `${currDate.getMonth().toString().padStart(2, "0")}-` +
-                    `${currDate.getDate().toString().padStart(2, "0")}T` +
-                    `${currDate.getHours().toString().padStart(2, "0")}:` +
-                    `${currDate.getMinutes().toString().padStart(2, "0")}:` +
-                    `${currDate.getSeconds().toString().padStart(2, "0")}`
-            })
+        const axios = require("axios")
+        const result = await axios.post("api/User/register", {
+            email: authData.email,
+            login: authData.login,
+            password: authData.password
         })
 
-        props.fetchData()*/
-
-        const axios = require("axios")
-        const data = await axios
-            .get("api/User")
-            .then(res => res.data)
         props.auth()
         props.handleClose()
     }
@@ -83,11 +62,6 @@ export const SignUpModal = (props) => {
                                 className={showPassword ? "show-pass-icon bi bi-eye-fill" : "show-pass-icon bi bi-eye-slash-fill"} /> 
                         </span>
                     </div>
-                    {/*<div className="mb-3 modal-form-item">
-                        <label className="form-label">Confirm password</label>
-                        <input className="form-control mx-2" id="confirmPassword" type={showPassword ? "text" : "password"}
-                            name="confirmPassword" value={authData.confirmPassword} onChange={handleChange} required />
-                    </div>*/}
                     <div className="modal-footer">
                         <a className="nav-link active sign-up-link me-auto" aria-current="page"
                             onClick={() => props.setModal("logIn")}>

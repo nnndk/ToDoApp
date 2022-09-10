@@ -20,15 +20,12 @@ export const App = () => {
   React.useEffect(() => {
     const getAuthStatusResult = async () => {
       const result = await getAuthStatus()
-      console.log(`abc - ${result}`)
 
       return result
     }
     
     const authStatus = getAuthStatusResult()
     setIsAuth(authStatus)
-
-    console.log(isAuth)
   }, [])
 
   return (

@@ -4,7 +4,6 @@ import { LogInModal } from "./Modals/LogInModal.jsx"
 import "./../main.css"
 
 export const NavMenu = (props) => {
-    console.log(`navbar1 - ${props.isAuth}`)
     const [isAuth, setIsAuth] = React.useState(props.isAuth)
     const [showAuthModal, setShowAuthModal] = React.useState(false);
     const handleCloseAuthModal = () => setShowAuthModal(false);
@@ -22,26 +21,18 @@ export const NavMenu = (props) => {
     const handleLogOut = async (event) => {
         const axios = require("axios")
         await axios.get("api/user/logout")
-        console.log(`navbar s1 - ${props.isAuth}`)
         props.setIsAuth(false)
-        console.log(`navbar s2 - ${props.isAuth}`)
         setIsAuth(false)
-    }
-
-    const showAuthStatus = async () => {
-        console.log(`navbar2 - ${await props.isAuth}`)
     }
 
     React.useEffect(() => {
         const getResult = async () => {
             const res = await props.isAuth
-            console.log(`res - ${res}`)
             setIsAuth(res)
             return res
         }
 
         getResult()
-        console.log(`navbar3 - ${isAuth}`)
     }, [])
 
     return (
@@ -49,7 +40,6 @@ export const NavMenu = (props) => {
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="/">ToDoApp</a>
-                    <button onClick={showAuthStatus}>isAuth?</button>
                     {isAuth ?
                         <a className="nav-link login-link" aria-current="page" onClick={handleLogOut}>
                             <span>

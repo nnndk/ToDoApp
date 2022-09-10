@@ -29,7 +29,6 @@ export const LogInModal = (props) => {
             password: authData.password
         })
 
-        console.log(result)
         props.auth()
         props.handleClose()
     }

@@ -4,7 +4,7 @@ import { LogInModal } from "./Modals/LogInModal.jsx"
 import "./../main.css"
 
 export const NavMenu = (props) => {
-    console.log(props.isAuth)
+    console.log(`navbar1 - ${props.isAuth}`)
     const [isAuth, setIsAuth] = React.useState(props.isAuth)
     const [showAuthModal, setShowAuthModal] = React.useState(false);
     const handleCloseAuthModal = () => setShowAuthModal(false);
@@ -22,35 +22,35 @@ export const NavMenu = (props) => {
     const handleLogOut = async (event) => {
         const axios = require("axios")
         await axios.get("api/user/logout")
-        console.log(`1 - ${props.isAuth}`)
+        console.log(`navbar s1 - ${props.isAuth}`)
         props.setIsAuth(false)
-        console.log(`2 - ${props.isAuth}`)
-        setIsAuth(props.isAuth)
+        console.log(`navbar s2 - ${props.isAuth}`)
+        setIsAuth(false)
     }
 
     const showAuthStatus = async () => {
-        console.log(await props.isAuth)
+        console.log(`navbar2 - ${await props.isAuth}`)
     }
+
+    React.useEffect(() => {
+        const getResult = async () => {
+            const res = await props.isAuth
+            console.log(`res - ${res}`)
+            setIsAuth(res)
+            return res
+        }
+
+        getResult()
+        console.log(`navbar3 - ${isAuth}`)
+    }, [])
 
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
                     <a className="navbar-brand" href="/">ToDoApp</a>
-                    <a className="nav-link login-link" aria-current="page" onClick={handleLogOut}>
-                        <span>
-                            <i className="bi bi-door-open-fill"></i>
-                            <b>Log Out</b>
-                        </span>
-                    </a>
-                    <a className="nav-link login-link" aria-current="page" onClick={handleLogIn}>
-                        <span>
-                            <i className="bi bi-person-fill mx-1 login-icon"></i>
-                            <b>Log In</b>
-                        </span>
-                    </a>
                     <button onClick={showAuthStatus}>isAuth?</button>
-                    {/*isAuth ?
+                    {isAuth ?
                         <a className="nav-link login-link" aria-current="page" onClick={handleLogOut}>
                             <span>
                                 <i className="bi bi-door-open-fill"></i>
@@ -63,7 +63,7 @@ export const NavMenu = (props) => {
                                 <b>Log In</b>
                             </span>
                         </a>
-                    */}
+                    }
                 </div>
             </nav>
 
